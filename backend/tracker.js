@@ -14,7 +14,7 @@
   // 2. Generate or retrieve session ID (Cookie + localStorage fallback)
   function getOrSetSessionId() {
     const key = 'cf_analytics_session_id';
-    
+
     // Attempt to read from localStorage
     let sessionId = localStorage.getItem(key);
     if (sessionId) return sessionId;
@@ -37,7 +37,7 @@
     // Generate a new UUID-like identifier if not found
     sessionId = 'sess_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
     localStorage.setItem(key, sessionId);
-    
+
     // Save as cookie (expires in 1 day)
     const d = new Date();
     d.setTime(d.getTime() + (24 * 60 * 60 * 1000));
@@ -64,9 +64,7 @@
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(payload),
-      // Use keepalive: true so that if the user clicks and immediately navigates, 
-      // the browser still completes sending the click event API request.
-      keepalive: true 
+      keepalive: true
     })
     .then(response => {
       if (!response.ok) {
@@ -94,7 +92,7 @@
   // 5. Track Mouse Clicks globally on document
   document.addEventListener('click', function (event) {
     // Capture both document-relative and viewport-relative positions.
-    // The viewport coordinates keep the heat points pinned to the visible click location.
+    // The dashboard renders a full-page canvas, so document coordinates keep points fixed.
     const clickX = event.pageX;
     const clickY = event.pageY;
     const viewportClickX = event.clientX;

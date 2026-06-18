@@ -73,6 +73,14 @@ To test and generate event data:
 2. Click around various buttons, cards, links, and navigations.
 3. Check the React Dashboard at [http://localhost:5173](http://localhost:5173) to see the sessions register and view the coordinates heatmap in real-time.
 
+### 5. Host the demo page and dashboard
+If you deploy the app, make sure the tracker files are deployed together with the backend service.
+1. Deploy the Node backend from the `backend/` folder, but keep the repo layout intact so the server can serve the sibling `tracker/` folder.
+2. Verify the demo page is reachable at `https://your-backend-domain/tracker/demo.html` or `https://your-backend-domain/tracker`.
+3. Deploy the dashboard separately and set `VITE_API_URL` to the public backend URL.
+4. If the demo page is blank in an iframe, the target site is probably sending `X-Frame-Options` or `Content-Security-Policy` headers that block embedding. Use the local demo page or allow framing on the page you want to preview.
+5. For local testing, open the backend URL first, then the dashboard, then generate clicks in the demo page and refresh the heatmap.
+
 ---
 
 ## 📌 Assumptions & Trade-offs

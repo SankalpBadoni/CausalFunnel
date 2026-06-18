@@ -15,8 +15,19 @@ app.use(cors());
 // Parse JSON request bodies
 app.use(express.json());
 
-// Serve the tracker folder statically so we can load tracker.js and demo.html easily
-app.use('/tracker', express.static(path.join(__dirname, '../tracker')));
+// Serve tracker assets from inside the backend folder so the deployment is self-contained.
+app.get('/tracker/tracker.js', (req, res) => {
+  res.sendFile(path.join(__dirname, 'tracker.js'));
+});
+
+app.get('/tracker/demo.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'demo.html'));
+});
+
+// Convenience route so hosted previews can open the demo page directly.
+app.get('/tracker', (req, res) => {
+  res.redirect('/tracker/demo.html');
+});
 
 // Connect to MongoDB
 mongoose.connect(MONGODB_URI)

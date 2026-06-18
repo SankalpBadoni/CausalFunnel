@@ -61,8 +61,23 @@ export default function HeatmapView() {
   // Adjust container dimensions to contain the largest click coordinates
   const getMaxDimensions = () => {
     if (clicks.length === 0) return { width: 1024, height: 800 };
-    const maxX = Math.max(...clicks.map(c => c.click_x || 0), 1000);
-    const maxY = Math.max(...clicks.map(c => c.click_y || 0), 800);
+
+    const maxX = Math.max(
+      ...clicks.map((c) => {
+        if (typeof c.click_x === 'number') return c.click_x;
+        if (typeof c.viewport_click_x === 'number') return c.viewport_click_x + (c.scroll_x || 0);
+        return 0;
+      }),
+      1000
+    );
+    const maxY = Math.max(
+      ...clicks.map((c) => {
+        if (typeof c.click_y === 'number') return c.click_y;
+        if (typeof c.viewport_click_y === 'number') return c.viewport_click_y + (c.scroll_y || 0);
+        return 0;
+      }),
+      800
+    );
     return {
       width: Math.max(maxX + 50, 1024),
       height: Math.max(maxY + 100, 800)
@@ -79,6 +94,24 @@ export default function HeatmapView() {
     } catch (e) {
       return urlStr;
     }
+  };
+
+  const getHeatPointPosition = (click) => {
+    if (typeof click.click_x === 'number' && typeof click.click_y === 'number') {
+      return {
+        x: click.click_x,
+        y: click.click_y,
+      };
+    }
+
+    if (typeof click.viewport_click_x === 'number' && typeof click.viewport_click_y === 'number') {
+      return {
+        x: click.viewport_click_x + (click.scroll_x || 0),
+        y: click.viewport_click_y + (click.scroll_y || 0),
+      };
+    }
+
+    return { x: 0, y: 0 };
   };
 
   return (
@@ -192,13 +225,14 @@ export default function HeatmapView() {
               {/* Absolute Overlay Layer for coordinate clicks */}
               <div className="viewport-overlay" style={{ height: `${iframeHeight}px` }}>
                 {clicks.map((click, index) => {
+                  const position = getHeatPointPosition(click);
                   return (
                     <div
                       key={index}
                       className="heatmap-dot"
                       style={{
-                        left: `${click.click_x}px`,
-                        top: `${click.click_y}px`,
+                        left: `${position.x}px`,
+                        top: `${position.y}px`,
                       }}
                       onMouseEnter={() => setHoveredDot(click)}
                       onMouseLeave={() => setHoveredDot(null)}
@@ -211,14 +245,16 @@ export default function HeatmapView() {
                   <div
                     className="heatmap-tooltip glass-panel"
                     style={{
-                      left: `${hoveredDot.click_x + 15}px`,
-                      top: `${hoveredDot.click_y - 20}px`,
+                      left: `${getHeatPointPosition(hoveredDot).x + 15}px`,
+                      top: `${getHeatPointPosition(hoveredDot).y - 20}px`,
                     }}
                   >
                     <div className="tooltip-title">Click Details</div>
                     <div className="tooltip-row">
                       <span className="tooltip-lbl">X / Y:</span>
-                      <span className="tooltip-val">{hoveredDot.click_x}px, {hoveredDot.click_y}px</span>
+                      <span className="tooltip-val">
+                        {getHeatPointPosition(hoveredDot).x}px, {getHeatPointPosition(hoveredDot).y}px
+                      </span>
                     </div>
                     {hoveredDot.viewport_width && (
                       <div className="tooltip-row">
@@ -416,7 +452,7 @@ export default function HeatmapView() {
           position: relative;
           width: 100%;
           min-width: 1024px;
-          overflow: auto;
+          overflow: hidden;
           background: #0f172a;
         }
 

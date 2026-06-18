@@ -28,6 +28,22 @@ const EventSchema = new mongoose.Schema({
     type: Number,
     required: false
   },
+  viewport_click_x: {
+    type: Number,
+    required: false
+  },
+  viewport_click_y: {
+    type: Number,
+    required: false
+  },
+  scroll_x: {
+    type: Number,
+    required: false
+  },
+  scroll_y: {
+    type: Number,
+    required: false
+  },
   viewport_width: {
     type: Number,
     required: false
