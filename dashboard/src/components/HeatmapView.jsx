@@ -86,6 +86,10 @@ export default function HeatmapView() {
 
   const { width: renderWidth, height: renderHeight } = getMaxDimensions();
 
+  useEffect(() => {
+    setIframeHeight(renderHeight);
+  }, [renderHeight, selectedPage]);
+
   // Parse relative URL path for display
   const getDisplayPath = (urlStr) => {
     try {
@@ -210,14 +214,9 @@ export default function HeatmapView() {
                   src={selectedPage}
                   className="viewport-iframe"
                   title="Webpage Viewport Preview"
+                  scrolling="no"
                   onLoad={(e) => {
-                    // Try to auto-height iframe, fallback to max clicked height
-                    try {
-                      const h = e.target.contentWindow.document.body.scrollHeight;
-                      if (h) setIframeHeight(Math.max(h, renderHeight));
-                    } catch (err) {
-                      setIframeHeight(renderHeight);
-                    }
+                    setIframeHeight(renderHeight);
                   }}
                 />
               )}
@@ -454,6 +453,7 @@ export default function HeatmapView() {
           min-width: 1024px;
           overflow: hidden;
           background: #0f172a;
+          height: auto;
         }
 
         .viewport-grid-bg {
@@ -479,6 +479,7 @@ export default function HeatmapView() {
           border: none;
           z-index: 2;
           background: transparent;
+          overflow: hidden;
         }
 
         .viewport-overlay {
