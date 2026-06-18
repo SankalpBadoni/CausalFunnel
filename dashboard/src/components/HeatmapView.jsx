@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const LIVE_PREVIEW_URL = 'https://causalfunnel-u4cq.onrender.com/tracker/demo.html';
 
 export default function HeatmapView() {
   const [pages, setPages] = useState([]);
@@ -206,12 +207,12 @@ export default function HeatmapView() {
                 <span className="browser-dot yellow"></span>
                 <span className="browser-dot green"></span>
               </div>
-              <div className="browser-address-bar" title={selectedPage}>
+              <div className="browser-address-bar" title={LIVE_PREVIEW_URL}>
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
                   <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                 </svg>
-                <span className="address-text">{selectedPage}</span>
+                <span className="address-text">{LIVE_PREVIEW_URL}</span>
               </div>
             </div>
 
@@ -222,7 +223,7 @@ export default function HeatmapView() {
               {/* The Iframe Preview */}
               {showIframe && (
                 <iframe
-                  src={selectedPage}
+                  src={LIVE_PREVIEW_URL}
                   className="viewport-iframe"
                   title="Webpage Viewport Preview"
                   scrolling="no"
