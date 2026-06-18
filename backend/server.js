@@ -132,7 +132,7 @@ app.get('/api/heatmap', async (req, res) => {
     const clicks = await Event.find({
       page_url,
       event_type: 'click'
-    }).select('click_x click_y viewport_width viewport_height timestamp -_id');
+    }).select('click_x click_y viewport_click_x viewport_click_y scroll_x scroll_y viewport_width viewport_height timestamp -_id');
 
     return res.json(clicks);
   } catch (error) {

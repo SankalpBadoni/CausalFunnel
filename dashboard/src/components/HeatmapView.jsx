@@ -64,23 +64,31 @@ export default function HeatmapView() {
 
     const maxX = Math.max(
       ...clicks.map((c) => {
-        if (typeof c.click_x === 'number') return c.click_x;
-        if (typeof c.viewport_click_x === 'number') return c.viewport_click_x + (c.scroll_x || 0);
+        if (typeof c.viewport_click_x === 'number') return c.viewport_click_x;
+        if (typeof c.click_x === 'number') return Math.max((c.click_x || 0) - (c.scroll_x || 0), 0);
         return 0;
       }),
       1000
     );
     const maxY = Math.max(
       ...clicks.map((c) => {
-        if (typeof c.click_y === 'number') return c.click_y;
-        if (typeof c.viewport_click_y === 'number') return c.viewport_click_y + (c.scroll_y || 0);
+        if (typeof c.viewport_click_y === 'number') return c.viewport_click_y;
+        if (typeof c.click_y === 'number') return Math.max((c.click_y || 0) - (c.scroll_y || 0), 0);
         return 0;
       }),
       800
     );
+    const maxViewportWidth = Math.max(
+      ...clicks.map((c) => c.viewport_width || 0),
+      1024
+    );
+    const maxViewportHeight = Math.max(
+      ...clicks.map((c) => c.viewport_height || 0),
+      800
+    );
     return {
-      width: Math.max(maxX + 50, 1024),
-      height: Math.max(maxY + 100, 800)
+      width: Math.max(maxX + 50, maxViewportWidth),
+      height: Math.max(maxY + 100, maxViewportHeight)
     };
   };
 
@@ -101,17 +109,20 @@ export default function HeatmapView() {
   };
 
   const getHeatPointPosition = (click) => {
-    if (typeof click.click_x === 'number' && typeof click.click_y === 'number') {
+    if (typeof click.viewport_click_x === 'number' && typeof click.viewport_click_y === 'number') {
       return {
-        x: click.click_x,
-        y: click.click_y,
+        x: click.viewport_click_x,
+        y: click.viewport_click_y,
       };
     }
 
-    if (typeof click.viewport_click_x === 'number' && typeof click.viewport_click_y === 'number') {
+    const scrollX = click.scroll_x || 0;
+    const scrollY = click.scroll_y || 0;
+
+    if (typeof click.click_x === 'number' && typeof click.click_y === 'number') {
       return {
-        x: click.viewport_click_x + (click.scroll_x || 0),
-        y: click.viewport_click_y + (click.scroll_y || 0),
+        x: Math.max(click.click_x - scrollX, 0),
+        y: Math.max(click.click_y - scrollY, 0),
       };
     }
 
