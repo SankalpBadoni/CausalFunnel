@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Causal Funnel - Tracking Demo Page</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #0f172a;
+      --bg-card: #1e293b;
+      --accent-cyan: #06b6d4;
+      --accent-purple: #a855f7;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      line-height: 1.6;
+      padding-bottom: 100px;
+      overflow-x: hidden;
+    }
+
+    /* Gradient Background Blobs */
+    .blob {
+      position: absolute;
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(6, 182, 212, 0.15) 0%, rgba(0,0,0,0) 70%);
+      top: -100px;
+      left: -100px;
+      z-index: -1;
+    }
+    .blob-2 {
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(168, 85, 247, 0.15) 0%, rgba(0,0,0,0) 70%);
+      bottom: 10%;
+      right: -200px;
+      z-index: -1;
+    }
+
+    header {
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.5px;
+    }
+
+    nav a {
+      color: var(--text-muted);
+      text-decoration: none;
+      margin-left: 1.5rem;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+
+    nav a:hover {
+      color: var(--accent-cyan);
+    }
+
+    main {
+      max-width: 1000px;
+      margin: 3rem auto;
+      padding: 0 2rem;
+    }
+
+    .hero {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    .hero h1 {
+      font-size: 3rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      letter-spacing: -1px;
+      line-height: 1.2;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 0 auto 2rem auto;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 0.8rem 2rem;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 50px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      border: none;
+      outline: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+      color: white;
+      box-shadow: 0 4px 20px rgba(6, 182, 212, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 25px rgba(6, 182, 212, 0.4);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-main);
+      margin-left: 1rem;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 16px;
+      padding: 2rem;
+      transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(6, 182, 212, 0.2);
+    }
+
+    .card-icon {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .card h3 {
+      font-size: 1.3rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .card p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    .cta-section {
+      background: linear-gradient(135deg, rgba(6, 182, 212, 0.08) 0%, rgba(168, 85, 247, 0.08) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 24px;
+      padding: 3rem;
+      text-align: center;
+      margin-top: 5rem;
+    }
+
+    .cta-section h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .cta-section p {
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+      font-size: 1.1rem;
+    }
+
+    .session-indicator {
+      margin-top: 3rem;
+      padding: 1rem;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px dashed rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      text-align: center;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    #session-id-display {
+      font-family: monospace;
+      color: var(--accent-cyan);
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="blob"></div>
+  <div class="blob-2"></div>
+
+  <header>
+    <div class="logo">CF Tracker Demo</div>
+    <nav>
+      <a href="#features">Features</a>
+      <a href="#services">Services</a>
+      <a href="#about">About Us</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h1>Accelerate Growth with Predictive Analytics</h1>
+      <p>Seamlessly track page views and click events. Witness real-time event stream collections stored securely in MongoDB, visualized directly on your heatmap dashboard.</p>
+      <div>
+        <button class="btn btn-primary" id="btn-hero-cta">Get Started Free</button>
+        <button class="btn btn-secondary" id="btn-hero-docs">Read Documentation</button>
+      </div>
+    </section>
+
+    <section id="features" class="features-grid">
+      <div class="card" id="card-feature-1">
+        <div class="card-icon">⚡</div>
+        <h3>Ultra-Lightweight</h3>
+        <p>A non-intrusive, optimized IIFE tracker designed to compile and run asynchronously without slowing down your site.</p>
+      </div>
+      <div class="card" id="card-feature-2">
+        <div class="card-icon">📊</div>
+        <h3>Heatmap Visualization</h3>
+        <p>Capture coordinate data offsets seamlessly and translate them into a high-fidelity visual glow overlay.</p>
+      </div>
+      <div class="card" id="card-feature-3">
+        <div class="card-icon">🛡️</div>
+        <h3>Privacy Compliance</h3>
+        <p>Ensures user sessions are structured cleanly, using localized storage and custom cookie expiration schemas.</p>
+      </div>
+    </section>
+
+    <section class="cta-section" id="cta-promo">
+      <h2>Ready to start tracking?</h2>
+      <p>Click on any button or element on this page multiple times, then refresh the dashboard to see your events populate.</p>
+      <button class="btn btn-primary" id="btn-cta-action">Trigger Analytics Event</button>
+    </section>
+
+    <div class="session-indicator">
+      Current Session ID: <span id="session-id-display">Loading...</span>
+    </div>
+  </main>
+
+  <!-- Load Tracking Script -->
+  <script src="./tracker.js"></script>
+  <script>
+    // Show current session ID on UI
+    window.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => {
+        const id = localStorage.getItem('cf_analytics_session_id');
+        if (id) {
+          document.getElementById('session-id-display').textContent = id;
+        }
+      }, 500);
+    });
+  </script>
+</body>
+</html>
